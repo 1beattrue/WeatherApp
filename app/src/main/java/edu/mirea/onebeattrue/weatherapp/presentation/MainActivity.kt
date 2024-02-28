@@ -1,9 +1,9 @@
-package edu.mirea.onebeattrue.weatherapp
+package edu.mirea.onebeattrue.weatherapp.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import edu.mirea.onebeattrue.weatherapp.ui.theme.WeatherAppTheme
+import edu.mirea.onebeattrue.weatherapp.presentation.ui.theme.WeatherAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

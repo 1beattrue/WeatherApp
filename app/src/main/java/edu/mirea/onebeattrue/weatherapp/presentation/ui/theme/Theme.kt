@@ -1,4 +1,4 @@
-package edu.mirea.onebeattrue.weatherapp.ui.theme
+package edu.mirea.onebeattrue.weatherapp.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
