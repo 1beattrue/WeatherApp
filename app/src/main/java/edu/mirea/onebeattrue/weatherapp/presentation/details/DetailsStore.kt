@@ -54,7 +54,7 @@ class DetailsStoreFactory @Inject constructor(
 
     fun create(city: City): DetailsStore =
         object : DetailsStore, Store<Intent, State, Label> by storeFactory.create(
-            name = "DetailsStore",
+            name = STORE_NAME,
             initialState = State(
                 city = city,
                 isFavourite = false,
@@ -159,5 +159,9 @@ class DetailsStoreFactory @Inject constructor(
                 copy(forecastState = State.ForecastState.Loading)
             }
         }
+    }
+
+    companion object {
+        const val STORE_NAME = "DetailsStore"
     }
 }
