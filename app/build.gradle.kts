@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.mvikotlin.core)
     implementation(libs.mvikotlin.main)
     implementation(libs.mvikotlin.coroutines)
+    implementation(libs.mvikotlin.logging)
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
