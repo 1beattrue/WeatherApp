@@ -124,7 +124,7 @@ class FavouriteStoreFactory @Inject constructor(
                         conditionIconUrl = weather.iconUrl
                     )
                 )
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 dispatch(
                     Msg.WeatherLoadingError(city.id)
                 )
