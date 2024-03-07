@@ -211,6 +211,7 @@ fun AddFavouriteCityCard(
     onClick: () -> Unit
 ) {
     Card(
+        modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = MaterialTheme.shapes.extraLarge,
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
