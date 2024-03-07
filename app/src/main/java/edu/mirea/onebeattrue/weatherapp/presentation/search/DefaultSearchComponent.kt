@@ -4,20 +4,22 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import edu.mirea.onebeattrue.weatherapp.domain.entity.City
 import edu.mirea.onebeattrue.weatherapp.presentation.extensions.componentScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class DefaultSearchComponent @Inject constructor(
+class DefaultSearchComponent @AssistedInject constructor(
     private val storeFactory: SearchStoreFactory,
-    private val openReason: OpenReason,
-    private val onBackClicked: () -> Unit,
-    private val onOpenForecastClicked: (City) -> Unit,
-    private val onSaveToFavouriteClicked: () -> Unit,
-    componentContext: ComponentContext
+    @Assisted("openReason") private val openReason: OpenReason,
+    @Assisted("onBackClicked") private val onBackClicked: () -> Unit,
+    @Assisted("onOpenForecastClicked") private val onOpenForecastClicked: (City) -> Unit,
+    @Assisted("onSaveToFavouriteClicked") private val onSaveToFavouriteClicked: () -> Unit,
+    @Assisted("componentContext") componentContext: ComponentContext
 ) : SearchComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { storeFactory.create(openReason) }
@@ -54,4 +56,14 @@ class DefaultSearchComponent @Inject constructor(
         store.accept(SearchStore.Intent.ClickCity(city))
     }
 
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("openReason") openReason: OpenReason,
+            @Assisted("onBackClicked") onBackClicked: () -> Unit,
+            @Assisted("onOpenForecastClicked") onOpenForecastClicked: (City) -> Unit,
+            @Assisted("onSaveToFavouriteClicked") onSaveToFavouriteClicked: () -> Unit,
+            @Assisted("componentContext") componentContext: ComponentContext
+        ): DefaultSearchComponent
+    }
 }
