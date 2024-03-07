@@ -1,31 +1,29 @@
 package edu.mirea.onebeattrue.weatherapp.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.lifecycle.lifecycleScope
-import edu.mirea.onebeattrue.weatherapp.data.network.api.ApiFactory
+import com.arkivanov.decompose.defaultComponentContext
+import edu.mirea.onebeattrue.weatherapp.WeatherApp
+import edu.mirea.onebeattrue.weatherapp.presentation.root.DefaultRootComponent
+import edu.mirea.onebeattrue.weatherapp.presentation.root.RootContent
 import edu.mirea.onebeattrue.weatherapp.presentation.ui.theme.WeatherAppTheme
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var rootComponentFactory: DefaultRootComponent.Factory
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as WeatherApp).component.inject(this)
         super.onCreate(savedInstanceState)
 
-        val apiService = ApiFactory.apiService
-
-        lifecycleScope.launch {
-            val current = apiService.loadCurrent("Moscow")
-            val forecast = apiService.loadForecast("Moscow")
-            val cities = apiService.searchCity("Moscow")
-
-            Log.d("MainActivity", "$current\n$forecast\n$cities")
-        }
+        val component = rootComponentFactory.create(defaultComponentContext())
 
         setContent {
             WeatherAppTheme {
-
+                RootContent(component = component)
             }
         }
     }

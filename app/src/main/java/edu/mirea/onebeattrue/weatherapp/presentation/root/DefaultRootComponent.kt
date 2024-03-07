@@ -3,6 +3,10 @@ package edu.mirea.onebeattrue.weatherapp.presentation.root
 import android.os.Parcelable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -20,8 +24,16 @@ class DefaultRootComponent @AssistedInject constructor(
     private val searchComponentFactory: DefaultSearchComponent.Factory,
     @Assisted("componentContext") componentContext: ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
+
+    private val navigation = StackNavigation<Config>()
+
     override val stack: Value<ChildStack<*, RootComponent.Child>>
-        get() = TODO("Not yet implemented")
+        get() = childStack(
+            source = navigation,
+            initialConfiguration = Config.Favourite,
+            handleBackButton = true,
+            childFactory = ::child
+        )
 
     private fun child(
         config: Config,
@@ -30,7 +42,7 @@ class DefaultRootComponent @AssistedInject constructor(
         is Config.Details -> {
             val component = detailsComponentFactory.create(
                 city = config.city,
-                onBackClicked = {},
+                onBackClicked = { navigation.pop() },
                 componentContext = componentContext
             )
             RootComponent.Child.Details(component)
@@ -38,9 +50,9 @@ class DefaultRootComponent @AssistedInject constructor(
 
         Config.Favourite -> {
             val component = favouriteComponentFactory.create(
-                onCityItemClicked = {},
-                onAddToFavouriteClicked = {},
-                onSearchClicked = {},
+                onCityItemClicked = { navigation.push(Config.Details(it)) },
+                onAddToFavouriteClicked = { navigation.push(Config.Search(OpenReason.AddToFavourite)) },
+                onSearchClicked = { navigation.push(Config.Search(OpenReason.RegularSearch)) },
                 componentContext = componentContext
             )
             RootComponent.Child.Favourite(component)
@@ -49,9 +61,9 @@ class DefaultRootComponent @AssistedInject constructor(
         is Config.Search -> {
             val component = searchComponentFactory.create(
                 openReason = config.openReason,
-                onOpenForecastClicked = {},
+                onOpenForecastClicked = { navigation.push(Config.Details(it)) },
                 onSaveToFavouriteClicked = {},
-                onBackClicked = {},
+                onBackClicked = { navigation.pop() },
                 componentContext = componentContext
             )
             RootComponent.Child.Search(component)
@@ -74,6 +86,6 @@ class DefaultRootComponent @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext
-        ): RootComponent
+        ): DefaultRootComponent
     }
 }
