@@ -1,5 +1,9 @@
 package edu.mirea.onebeattrue.weatherapp.presentation.search
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideIn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +38,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import edu.mirea.onebeattrue.weatherapp.R
 import edu.mirea.onebeattrue.weatherapp.domain.entity.City
@@ -73,7 +78,10 @@ fun SearchContent(
         active = true,
         onActiveChange = {},
         leadingIcon = {
-            IconButton(onClick = { component.onClickBack() }) {
+            IconButton(onClick = {
+                focusManager.clearFocus()
+                component.onClickBack()
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = null
@@ -122,21 +130,47 @@ fun SearchContent(
             }
 
             is SearchStore.State.SearchState.SuccessLoaded -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(16.dp)
-                ) {
-                    items(
-                        items = searchState.cities,
-                        key = { it.id }
-                    ) { city ->
-                        CityCard(city = city, onCityClick = {
-                            focusManager.clearFocus()
-                            component.onClickCity(it)
-                        })
-                    }
-                }
+                AnimatedSearchLoaded(
+                    onCityClick = {
+                        focusManager.clearFocus()
+                        component.onClickCity(it)
+                    },
+                    cities = searchState.cities
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AnimatedSearchLoaded(
+    modifier: Modifier = Modifier,
+    onCityClick: (City) -> Unit,
+    cities: List<City>
+) {
+    val state = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+
+    AnimatedVisibility(
+        modifier = modifier,
+        visibleState = state,
+        enter = fadeIn() + slideIn(initialOffset = { IntOffset(0, -it.height / 16) })
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(
+                items = cities,
+                key = { it.id }
+            ) { city ->
+                CityCard(city = city, onCityClick = {
+                    onCityClick(it)
+                })
             }
         }
     }
