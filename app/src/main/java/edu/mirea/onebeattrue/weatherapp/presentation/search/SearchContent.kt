@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import edu.mirea.onebeattrue.weatherapp.R
@@ -49,6 +50,8 @@ fun SearchContent(
         FocusRequester()
     }
 
+    val focusManager = LocalFocusManager.current
+
     LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
     }
@@ -63,7 +66,10 @@ fun SearchContent(
             component.changeSearchQuery(it)
             if (it.isNotBlank()) component.onClickSearch()
         },
-        onSearch = { component.onClickSearch() },
+        onSearch = {
+            focusManager.clearFocus()
+            component.onClickSearch()
+        },
         active = true,
         onActiveChange = {},
         leadingIcon = {
@@ -75,7 +81,10 @@ fun SearchContent(
             }
         },
         trailingIcon = {
-            IconButton(onClick = { component.onClickSearch() }) {
+            IconButton(onClick = {
+                focusManager.clearFocus()
+                component.onClickSearch()
+            }) {
                 Icon(
                     imageVector = Icons.Rounded.Search,
                     contentDescription = null
@@ -122,7 +131,10 @@ fun SearchContent(
                         items = searchState.cities,
                         key = { it.id }
                     ) { city ->
-                        CityCard(city = city, onCityClick = { component.onClickCity(it) })
+                        CityCard(city = city, onCityClick = {
+                            focusManager.clearFocus()
+                            component.onClickCity(it)
+                        })
                     }
                 }
             }
