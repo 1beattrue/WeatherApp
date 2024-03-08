@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">WeatherApp</string>
-    <string name="button_add_favourite">Add favourite</string>
-    <string name="search">Search</string>
-    <string name="upcoming">Upcoming</string>
+    <string name="button_add_favourite">Добавить в избранное</string>
+    <string name="search">Поиск</string>
+    <string name="upcoming">Прогноз</string>
+    <string name="nothing_to_show">Ничего не найдено</string>
+    <string name="something_went_wrong">Что-то пошло не так…</string>
 </resources>

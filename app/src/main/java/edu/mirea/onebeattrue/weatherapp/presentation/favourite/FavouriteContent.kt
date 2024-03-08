@@ -144,7 +144,7 @@ private fun CityCard(
                     Text(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
-                            .padding(bottom = 24.dp),
+                            .padding(bottom = 48.dp),
                         text = weatherState.tempC.tempToFormattedString(),
                         color = MaterialTheme.colorScheme.background,
                         style = MaterialTheme.typography.bodyLarge.copy(fontSize = 36.sp)

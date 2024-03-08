@@ -62,7 +62,7 @@ class DefaultRootComponent @AssistedInject constructor(
             val component = searchComponentFactory.create(
                 openReason = config.openReason,
                 onOpenForecastClicked = { navigation.push(Config.Details(it)) },
-                onSaveToFavouriteClicked = {},
+                onSaveToFavouriteClicked = { navigation.pop() },
                 onBackClicked = { navigation.pop() },
                 componentContext = componentContext
             )
