@@ -199,7 +199,7 @@ fun SearchCard(
             Text(
                 text = stringResource(R.string.search),
                 color = MaterialTheme.colorScheme.background,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(end = 16.dp)
             )
         }
     }
